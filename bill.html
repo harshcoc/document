@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krati - Documents</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-folder-open"></i>
+                <span>Family Archive</span>
+            </div>
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Search documents...">
+            </div>
+            <div class="profile-icon">
+                <i class="fas fa-user-circle"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <a href="index.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+        
+        <div class="page-header">
+            <h2>Bills and Land Documents</h2>
+            <p class="page-subtitle">Select a category to view documents</p>
+        </div>
+
+        <!-- Categories Grid -->
+        <div class="categories-grid">
+            <!-- Category 1: Gov doc -->
+            <div class="category-card" onclick="toggleCategory('gov-doc')">
+                <div class="category-icon">
+                    <i class="fas fa-landmark"></i>
+                </div>
+                <h3 class="category-name">Bills</h3>
+                <p class="category-count">0 document(s)</p>
+            </div>
+
+            <!-- Category 2: Bank doc -->
+            <div class="category-card" onclick="toggleCategory('bank-doc')">
+                <div class="category-icon">
+                    <i class="fas fa-building-columns"></i>
+                </div>
+                <h3 class="category-name">Land </h3>
+                <p class="category-count">0 document(s)</p>
+            </div>
+
+          
+            
+        </div>
+
+        <!-- Documents Section for bill doc -->
+        <div id="gov-doc" class="documents-section" style="display: none;">
+            <h3 class="section-title">
+                <i class="fas fa-landmark"></i> Bills
+            </h3>
+
+            <!-- COPY THIS TO  
+            <div class="documents-grid">
+                <div class="document-card">
+                    <div class="doc-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="doc-info">
+                        <h4 class="doc-name"> geyser new </h4>
+                        
+                    </div>
+                    <a href="https://drive.google.com/file/d/16Dd26MzC0Ynw8-3z6dzIu422SNRYyf0w/view?usp=drive_link" target="_blank" class="doc-link">
+                        <i class="fas fa-external-link-alt"></i> Open
+                    </a>
+                </div>
+                 TO THIS  -->
+            </div>
+        </div>
+
+        <!-- Documents Section for Land -->
+        <div id="bank-doc" class="documents-section" style="display: none;">
+            <h3 class="section-title">
+                <i class="fas fa-building-columns"></i> Land
+            </h3>
+            <!-- Documents Section for Land 
+            <div class="documents-grid">
+                <div class="document-card">
+                    <div class="doc-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="doc-info">
+                        <h4 class="doc-name">Land Documents</h4>
+                        <p class="doc-meta">land number </p>
+                    </div>
+                    <a href="https://drive.google.com/file/d/YOUR_FILE_ID/view" target="_blank" class="doc-link">
+                        <i class="fas fa-external-link-alt"></i> Open
+                    </a>
+                </div>
+                 Documents Section for Land -->
+            </div>
+        </div>
+
+        
+       
+    </div>
+
+    <script src="member.js"></script>
+</body>
+</html>

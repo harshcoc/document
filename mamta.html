@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mamta - Documents</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-folder-open"></i>
+                <span>Family Archive</span>
+            </div>
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Search documents...">
+            </div>
+            <div class="profile-icon">
+                <i class="fas fa-user-circle"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <a href="index.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+        
+        <div class="page-header">
+            <h2>Mamta's Documents</h2>
+            <p class="page-subtitle">Select a category to view documents</p>
+        </div>
+
+        <!-- Categories Grid -->
+        <div class="categories-grid">
+            <!-- Category 1: Gov doc -->
+            <div class="category-card" onclick="toggleCategory('gov-doc')">
+                <div class="category-icon">
+                    <i class="fas fa-landmark"></i>
+                </div>
+                <h3 class="category-name">Gov doc</h3>
+                <p class="category-count">4 document(s)</p>
+            </div>
+
+            <!-- Category 2: Bank doc -->
+            <div class="category-card" onclick="toggleCategory('bank-doc')">
+                <div class="category-icon">
+                    <i class="fas fa-building-columns"></i>
+                </div>
+                <h3 class="category-name">Bank doc</h3>
+                <p class="category-count">5 document(s)</p>
+            </div>
+        </div>
+
+        <!-- Documents Section for Gov doc -->
+        <div id="gov-doc" class="documents-section" style="display: none;">
+            <h3 class="section-title">
+                <i class="fas fa-landmark"></i> Gov doc
+            </h3>
+            <div class="documents-grid">
+                <div class="document-card">
+                    <div class="doc-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="doc-info">
+                        <h4 class="doc-name">Aadhaar Card</h4>
+                        
+                    </div>
+                    <a href="https://drive.google.com/file/d/1prB3fvCIaoOWF3OSpg2BJAjUWWwc3Tde/view?usp=drive_link" target="_blank" class="doc-link">
+                        <i class="fas fa-external-link-alt"></i> Open
+                    </a>
+                </div>
+                 
+                
+
+                <!-- Documents COPY THIS TO ADD DOC IN GOV TAB -->
+
+                <div class="document-card">
+                    <div class="doc-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="doc-info">
+                        <h4 class="doc-name">PEN CARD</h4>
+                        
+                    </div>
+                    <a href="https://drive.google.com/file/d/14IhAdOQKAp62wkEJcX4eLpZznL3XlEWe/view?usp=drive_link" target="_blank" class="doc-link">
+                        <i class="fas fa-external-link-alt"></i> Open
+                    </a>
+                </div>
+
+                <!-- TO THIS  -->
+
+
+                <!-- Documents COPY THIS TO ADD DOC IN GOV TAB -->
+
+                <div class="document-card">
+                    <div class="doc-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="doc-info">
+                        <h4 class="doc-name">VOTER CARD</h4>
+                        
+                    </div>
+                    <a href="https://drive.google.com/file/d/1wRuiEtOTy7xE-6_Z2INysqBgKK7mAbfP/view?usp=drive_link" target="_blank" class="doc-link">
+                        <i class="fas fa-external-link-alt"></i> Open
+                    </a>
+                </div>
+
+                <!-- TO THIS  -->
+
+                <!-- Documents COPY THIS TO ADD DOC IN GOV TAB -->
+
+                <div class="document-card">
+                    <div class="doc-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="doc-info">
+                        <h4 class="doc-name">Driving license</h4>
+                        
+                    </div>
+                    <a href="https://drive.google.com/file/d/1ONIV4U2ltpPr_41ZppMfB_hXu-3vpKR_/view?usp=drive_link" target="_blank" class="doc-link">
+                        <i class="fas fa-external-link-alt"></i> Open
+                    </a>
+                </div>
+
+                <!-- TO THIS  -->
+
+
+
+            </div>
+        </div>
+
+        <!-- Documents Section for Bank doc -->
+        <div id="bank-doc" class="documents-section" style="display: none;">
+            <h3 class="section-title">
+                <i class="fas fa-building-columns"></i> Bank doc
+            </h3>
+            <!-- Documents Section for Bank doc -->
+            <div class="documents-grid">
+                <div class="document-card">
+                    <div class="doc-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="doc-info">
+                        <h4 class="doc-name"> PNB PASSBOOK</h4>
+                        <p class="doc-meta"></p>
+                    </div>
+                    <a href="https://drive.google.com/file/d/1w64ffmafeG5RtJE051GhkNvSkfDLCg3T/view?usp=drive_link" target="_blank" class="doc-link">
+                        <i class="fas fa-external-link-alt"></i> Open
+                    </a>
+                </div>
+
+                <!-- Documents Section for Bank doc -->
+                 <div class="document-card">
+                    <div class="doc-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="doc-info">
+                        <h4 class="doc-name"> SBI PASSBOOK</h4>
+                        <p class="doc-meta"></p>
+                    </div>
+                    <a href="https://drive.google.com/file/d/1BkmbWHyEUYEtZHiL1rwkZ9L1iWN0-TbT/view?usp=drive_link" target="_blank" class="doc-link">
+                        <i class="fas fa-external-link-alt"></i> Open
+                    </a>
+                </div>
+
+
+
+                 <!-- Documents Section for Bank doc -->
+                  <!-- Documents Section for Bank doc -->
+                 <div class="document-card">
+                    <div class="doc-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="doc-info">
+                        <h4 class="doc-name"> PPF CENTRAL BANK  PASSBOOK</h4>
+                        <p class="doc-meta"></p>
+                    </div>
+                    <a href="https://drive.google.com/file/d/1fwRNYckufEXIj7wT2fTP5ZUVOtvsgL0Y/view?usp=drive_link" target="_blank" class="doc-link">
+                        <i class="fas fa-external-link-alt"></i> Open
+                    </a>
+                </div>
+
+
+
+                 <!-- Documents Section for Bank doc -->
+                  <!-- Documents Section for Bank doc -->
+                 <div class="document-card">
+                    <div class="doc-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="doc-info">
+                        <h4 class="doc-name"> POST OFFICE PASSBOOK</h4>
+                        <p class="doc-meta"></p>
+                    </div>
+                    <a href="https://drive.google.com/file/d/1ap8_BiBkRR2VDwc0WLXuocywh4mviGZy/view?usp=drive_link" target="_blank" class="doc-link">
+                        <i class="fas fa-external-link-alt"></i> Open
+                    </a>
+                </div>
+                 <!-- Documents Section for Bank doc -->
+                  <!-- Documents Section for Bank doc -->
+                 <div class="document-card">
+                    <div class="doc-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="doc-info">
+                        <h4 class="doc-name"> JOIN ACCOUNT CENTRAL BANK PASSBOOK</h4>
+                        <p class="doc-meta"></p>
+                    </div>
+                    <a href="https://drive.google.com/file/d/1ap8_BiBkRR2VDwc0WLXuocywh4mviGZy/view?usp=drive_link" target="_blank" class="doc-link">
+                        <i class="fas fa-external-link-alt"></i> Open
+                    </a>
+                </div>
+                 <!-- Documents Section for Bank doc -->
+                
+                
+                
+                
+                
+                
+                </div>
+             
+              
+                 
+        </div>
+    </div>
+
+    <script src="member.js"></script>
+</body>
+</html>
