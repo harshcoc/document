@@ -56,8 +56,6 @@
                 <p class="category-count">0 document(s)</p>
             </div>
 
-          
-            
         </div>
 
         <!-- Documents Section for bill doc -->
@@ -66,9 +64,6 @@
                 <h3 class="section-title">
                     <i class="fas fa-landmark"></i> Bills
                 </h3>
-                <button class="add-doc-btn" onclick="showAddDocModal('gov-doc')">
-                    <i class="fas fa-plus"></i> Add Document
-                </button>
             </div>
             <div class="documents-grid">
                 <!-- Documents will be loaded here dynamically -->
@@ -81,9 +76,6 @@
                 <h3 class="section-title">
                     <i class="fas fa-building-columns"></i> Land
                 </h3>
-                <button class="add-doc-btn" onclick="showAddDocModal('bank-doc')">
-                    <i class="fas fa-plus"></i> Add Document
-                </button>
             </div>
             <div class="documents-grid">
                 <!-- Documents will be loaded here dynamically -->
@@ -91,36 +83,7 @@
             </div>
         </div>
 
-        
-       
     </div>
-
-    <!-- Add Document Modal -->
-    <div id="addDocModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeAddDocModal()">&times;</span>
-            <h2>Add New Document</h2>
-            <p>Category: <strong id="modalCategoryName"></strong></p>
-            <form id="addDocForm" onsubmit="event.preventDefault(); saveDocument();">
-                <input type="hidden" id="modalCategoryId">
-                <div class="form-group">
-                    <label for="docName">Document Name:</label>
-                    <input type="text" id="docName" required placeholder="e.g., Electricity Bill, Land Document">
-                </div>
-                <div class="form-group">
-                    <label for="docLink">Google Drive Link:</label>
-                    <input type="url" id="docLink" required placeholder="https://drive.google.com/file/d/...">
-                </div>
-                <div id="addDocError" class="error-message"></div>
-                <div class="modal-buttons">
-                    <button type="button" class="btn-secondary" onclick="closeAddDocModal()">Cancel</button>
-                    <button type="submit" class="btn-primary">Add Document</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <script src="docs-data.js"></script>
     <script src="member.js"></script>
 </body>
 </html>

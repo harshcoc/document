@@ -81,14 +81,8 @@
                 <h3 class="section-title">
                     <i class="fas fa-car"></i> Car doc
                 </h3>
-                <button class="add-doc-btn" onclick="showAddDocModal('car-doc')">
-                    <i class="fas fa-plus"></i> Add Document
-                </button>
             </div>
             <div class="documents-grid">
-                <button class="add-doc-btn" onclick="showAddDocModal('gov-doc')">
-                    <i class="fas fa-plus"></i> Add Document
-                </button>
             </div>
             <div class="documents-grid">
                 <div class="document-card">
@@ -117,7 +111,6 @@
                     </a>
                 </div>
                 <!-- to this  -->
-
 
                 <!-- copy this code to add document in gov tab -->
                 <div class="document-card">
@@ -148,7 +141,6 @@
                 </div>
                 <!-- to this  -->
 
-
                 <div class="document-card">
                     <div class="doc-icon">
                         <i class="fas fa-file-pdf"></i>
@@ -163,11 +155,6 @@
                 </div>
                 <!-- to this  -->
 
-
-
-                
-
-
             </div>
         </div>
 
@@ -177,9 +164,6 @@
                 <h3 class="section-title">
                     <i class="fas fa-building-columns"></i> Bank doc
                 </h3>
-                <button class="add-doc-btn" onclick="showAddDocModal('bank-doc')">
-                    <i class="fas fa-plus"></i> Add Document
-                </button>
             </div>
             <div class="documents-grid">
                 <div class="document-card">
@@ -194,7 +178,6 @@
                         <i class="fas fa-external-link-alt"></i> Open
                     </a>
                 </div>
-
 
                  <!-- copy this code to add document in BANK tab -->
                 <div class="document-card">
@@ -260,36 +243,6 @@
              Documents Section for Car doc -->
         </div>
     </div>
-
-    <!-- Add Document Modal -->
-    <div id="addDocModal" class="modal">
-        <div class="modal-content">
-            <h2>
-                <i class="fas fa-plus-circle"></i> Add New Document
-            </h2>
-            <p>Add document to <strong id="modalCategoryName"></strong></p>
-            <input type="hidden" id="modalCategoryId">
-            
-            <div class="form-group">
-                <label for="docName">Document Name</label>
-                <input type="text" id="docName" placeholder="e.g., Passport, PAN Card">
-            </div>
-            
-            <div class="form-group">
-                <label for="docLink">Google Drive Link</label>
-                <input type="text" id="docLink" placeholder="https://drive.google.com/...">
-            </div>
-            
-            <div class="modal-buttons">
-                <button class="cancel-btn" onclick="closeAddDocModal()">Cancel</button>
-                <button class="submit-btn" onclick="saveDocument()">Add Document</button>
-            </div>
-            <p id="addDocError" class="error-msg"></p>
-        </div>
-    </div>
-
-    <script src="docs-data.js"></script>
-    <script src="docs-data.js"></script>
     <script src="member.js"></script>
 </body>
 </html>
