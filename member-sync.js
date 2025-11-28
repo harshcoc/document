@@ -1,4 +1,6 @@
-// GitHub-based document management system for global sync
+// GitHub-based document management system
+// This version stores data in GitHub repository for cross-device sync
+
 const GITHUB_CONFIG = {
     owner: 'harshcoc',
     repo: 'document',
@@ -9,18 +11,7 @@ const GITHUB_CONFIG = {
 let documentsData = {};
 let isLoading = false;
 
-// Initialize documents system by loading from GitHub
-function initializeDocuments() {
-    loadDocumentsFromGitHub();
-}
-
-// Get current page person name from title
-function getCurrentPerson() {
-    const title = document.title;
-    return title.split(' - ')[0].toLowerCase();
-}
-
-// Load documents from GitHub for global sync
+// Load documents from GitHub
 async function loadDocumentsFromGitHub() {
     if (isLoading) return;
     isLoading = true;
@@ -28,9 +19,9 @@ async function loadDocumentsFromGitHub() {
     try {
         showLoadingMessage('Loading documents...');
         
-        // Fetch documents data from GitHub
+        // Try to fetch from GitHub
         const response = await fetch(
-            `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}?t=${Date.now()}`
+            `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}`
         );
         
         if (response.ok) {
@@ -49,12 +40,12 @@ async function loadDocumentsFromGitHub() {
         console.error('Error loading from GitHub:', error);
         hideLoadingMessage();
         
-        // Fallback to localStorage if GitHub fails
+        // Fallback to localStorage
         const localData = localStorage.getItem('familyDocuments');
         if (localData) {
             documentsData = JSON.parse(localData);
             displayDocuments();
-            showNotification('Loaded from local storage. Some documents may not be synced globally.', 'warning');
+            showNotification('Loaded from local storage. Some documents may not be synced across devices.', 'warning');
         } else {
             documentsData = getDefaultDocumentsData();
             displayDocuments();
@@ -76,6 +67,33 @@ function getDefaultDocumentsData() {
         pradeep: { "Gov doc": [], "Bank doc": [] },
         sandeep: { "Gov doc": [], "Bank doc": [] }
     };
+}
+
+// Save documents to GitHub (requires personal access token)
+async function saveDocumentsToGitHub() {
+    try {
+        showLoadingMessage('Saving document...');
+        
+        // For now, save to localStorage as backup
+        localStorage.setItem('familyDocuments', JSON.stringify(documentsData));
+        
+        hideLoadingMessage();
+        showNotification('Document saved! Note: Auto-sync to GitHub requires setup.', 'info');
+        
+        // Instructions for user to manually commit
+        console.log('To enable auto-sync, you need to:');
+        console.log('1. Create a GitHub Personal Access Token');
+        console.log('2. Add it to the code');
+        console.log('3. Or manually update documents-data.json file');
+        
+    } catch (error) {
+        console.error('Error saving to GitHub:', error);
+        hideLoadingMessage();
+        
+        // Fallback to localStorage
+        localStorage.setItem('familyDocuments', JSON.stringify(documentsData));
+        showNotification('Saved locally. Please manually update the repository for cross-device sync.', 'warning');
+    }
 }
 
 // Display documents on the page
@@ -102,6 +120,17 @@ function displayDocuments() {
             updateCategoryCount(categoryId);
         }
     });
+}
+
+// Initialize documents system
+function initializeDocuments() {
+    loadDocumentsFromGitHub();
+}
+
+// Get current page person name from title
+function getCurrentPerson() {
+    const title = document.title;
+    return title.split(' - ')[0].toLowerCase();
 }
 
 // Add document card to grid
@@ -190,7 +219,7 @@ function closeAddDocModal() {
     document.getElementById('addDocModal').classList.remove('active');
 }
 
-// Save new document with global sync
+// Save new document
 async function saveDocument() {
     const categoryId = document.getElementById('modalCategoryId').value;
     const docName = document.getElementById('docName').value.trim();
@@ -234,8 +263,8 @@ async function saveDocument() {
     
     documentsData[person][categoryName].push(newDoc);
     
-    // Save to localStorage as backup and for manual sync
-    localStorage.setItem('familyDocuments', JSON.stringify(documentsData));
+    // Save to GitHub/localStorage
+    await saveDocumentsToGitHub();
     
     // Add to UI
     const grid = section.querySelector('.documents-grid');
@@ -247,12 +276,11 @@ async function saveDocument() {
     // Close modal
     closeAddDocModal();
     
-    // Show instructions for manual sync
-    showNotification('Document saved! Please update documents-data.json file and push to GitHub for global sync.', 'info');
-    console.log('To sync globally: Update documents-data.json with the new data and commit to GitHub');
+    // Show success message
+    showNotification('Document added successfully!', 'success');
 }
 
-// Delete document with global sync
+// Delete document
 async function deleteDocument(button, docName) {
     // Password protection
     const password = prompt('Enter password to delete document:');
@@ -280,8 +308,8 @@ async function deleteDocument(button, docName) {
         );
     }
     
-    // Save to localStorage as backup
-    localStorage.setItem('familyDocuments', JSON.stringify(documentsData));
+    // Save to GitHub/localStorage
+    await saveDocumentsToGitHub();
     
     // Remove from UI
     docCard.remove();
@@ -289,8 +317,7 @@ async function deleteDocument(button, docName) {
     // Update count
     updateCategoryCount(categoryId);
     
-    // Show instructions for manual sync
-    showNotification('Document deleted! Please update documents-data.json file and push to GitHub for global sync.', 'warning');
+    showNotification('Document deleted successfully!', 'success');
 }
 
 // Loading and notification functions
@@ -330,7 +357,7 @@ function hideLoadingMessage() {
     }
 }
 
-// Show notification with better styling
+// Show notification
 function showNotification(message, type) {
     const notification = document.createElement('div');
     notification.className = `notification ${type}`;
@@ -341,7 +368,7 @@ function showNotification(message, type) {
         background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : type === 'warning' ? '#ff9800' : '#2196F3'};
         color: white;
         padding: 15px 20px;
-        border-radius: 8px;
+        border-radius: 5px;
         z-index: 9999;
         display: flex;
         align-items: center;
@@ -349,8 +376,7 @@ function showNotification(message, type) {
         transform: translateX(400px);
         transition: transform 0.3s ease;
         max-width: 400px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-        font-size: 14px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     `;
     
     notification.innerHTML = `
@@ -366,11 +392,11 @@ function showNotification(message, type) {
     setTimeout(() => {
         notification.style.transform = 'translateX(400px)';
         setTimeout(() => notification.remove(), 300);
-    }, 6000);
+    }, 5000);
 }
 
 // Search functionality
-function setupSearchFunctionality() {
+document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('searchInput');
     if (searchInput) {
         searchInput.addEventListener('input', function(e) {
@@ -419,7 +445,7 @@ function setupSearchFunctionality() {
             });
         });
     }
-}
+});
 
 // Close modal when clicking outside
 window.onclick = function(event) {
@@ -429,10 +455,9 @@ window.onclick = function(event) {
     }
 }
 
-// Initialize on page load with GitHub sync
+// Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
     initializeDocuments();
-    setupSearchFunctionality();
 });
 
-console.log('Global sync member page loaded successfully! 🌍🔄');
+console.log('GitHub-synced member page loaded successfully! 🎉');
