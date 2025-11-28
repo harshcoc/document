@@ -96,11 +96,45 @@ document.getElementById('username').addEventListener('keypress', function(e) {
     }
 });
 
-// Initialize local storage for documents
+// Initialize documents system with global sync
 function initializeDocuments() {
-    if (!localStorage.getItem('familyDocuments')) {
-        localStorage.setItem('familyDocuments', JSON.stringify({}));
+    // Load from global data if available
+    if (window.GLOBAL_DOCUMENTS_DATA) {
+        const allDocs = window.GLOBAL_DOCUMENTS_DATA;
+        displayDocumentsFromGlobalData(allDocs);
+    } else {
+        // Fallback to localStorage
+        if (!localStorage.getItem('familyDocuments')) {
+            localStorage.setItem('familyDocuments', JSON.stringify({}));
+        }
+        loadDocuments();
     }
+}
+
+// Display documents from global data
+function displayDocumentsFromGlobalData(allDocs) {
+    const person = getCurrentPerson();
+    const personData = allDocs[person] || {};
+    
+    Object.keys(personData).forEach(category => {
+        const categoryId = category.replace(/ /g, '-').toLowerCase();
+        const section = document.getElementById(categoryId);
+        
+        if (section && personData[category].length > 0) {
+            const grid = section.querySelector('.documents-grid');
+            
+            // Clear existing dynamic documents
+            const existingDocs = grid.querySelectorAll('.document-card[data-dynamic="true"]');
+            existingDocs.forEach(doc => doc.remove());
+            
+            // Add stored documents
+            personData[category].forEach(doc => {
+                addDocumentCard(grid, doc.name, doc.link, doc.date, true);
+            });
+            
+            updateCategoryCount(categoryId);
+        }
+    });
 }
 
 // Get current page person name
@@ -134,24 +168,28 @@ function loadDocuments() {
     });
 }
 
-// Add document card to grid
-function addDocumentCard(grid, name, link, date) {
+// Add document card to grid with global sync support
+function addDocumentCard(grid, name, link, date, isDynamic = false) {
     const docCard = document.createElement('div');
     docCard.className = 'document-card';
+    if (isDynamic) {
+        docCard.setAttribute('data-dynamic', 'true');
+    }
+    
     docCard.innerHTML = `
         <div class="doc-icon">
             <i class="fas fa-file-pdf"></i>
         </div>
         <div class="doc-info">
             <h4 class="doc-name">${name}</h4>
-            <p class="doc-meta">Added: ${date}</p>
+            ${date ? `<p class="doc-meta">Added: ${date}</p>` : ''}
         </div>
         <a href="${link}" target="_blank" class="doc-link">
             <i class="fas fa-external-link-alt"></i> Open
         </a>
-        <button class="delete-btn" onclick="deleteDocument(this, '${name}')">
+        ${isDynamic ? `<button class="delete-btn" onclick="deleteDocument(this, '${name}')">
             <i class="fas fa-trash"></i>
-        </button>
+        </button>` : ''}
     `;
     grid.appendChild(docCard);
 }

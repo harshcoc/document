@@ -7,12 +7,13 @@ Your website now has **global sync capability**! Documents added on your laptop 
 ## ✅ WHAT'S BEEN UPDATED
 
 1. **member.js** - Now loads documents from GitHub for global sync
-2. **documents-data.json** - Central storage for all documents 
+2. **documents-data.json** - Central storage for all documents
 3. **sync-documents.js** - Auto-sync script for easy updates
 
 ## 🚀 HOW TO ADD DOCUMENTS GLOBALLY
 
 ### Method 1: Manual Sync (Recommended)
+
 1. Add documents through your website as usual
 2. Copy the data from browser console or localStorage
 3. Update `documents-data.json` file manually
@@ -20,12 +21,14 @@ Your website now has **global sync capability**! Documents added on your laptop 
 5. Documents appear globally within minutes!
 
 ### Method 2: Auto-Sync Script
+
 1. Add documents through your website
 2. Run: `node sync-documents.js`
 3. Script automatically commits and pushes to GitHub
 4. Documents sync globally!
 
 ### Method 3: Direct JSON Edit
+
 1. Edit `documents-data.json` directly
 2. Add your document data in the correct person/category
 3. Commit and push to GitHub
@@ -34,7 +37,7 @@ Your website now has **global sync capability**! Documents added on your laptop 
 ## 📱 TESTING GLOBAL SYNC
 
 1. Add a document on your laptop
-2. Update `documents-data.json` and push to GitHub  
+2. Update `documents-data.json` and push to GitHub
 3. Open website on your phone
 4. Document should appear automatically!
 5. Refresh page if needed

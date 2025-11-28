@@ -1,17 +1,10 @@
-// GitHub-based document management system for global sync
-const GITHUB_CONFIG = {
-    owner: 'harshcoc',
-    repo: 'document',
-    filePath: 'documents-data.json',
-    branch: 'main'
-};
-
+// Global document management system with reliable cross-device sync
 let documentsData = {};
 let isLoading = false;
 
-// Initialize documents system by loading from GitHub
+// Initialize documents system by loading global data
 function initializeDocuments() {
-    loadDocumentsFromGitHub();
+    loadGlobalDocuments();
 }
 
 // Get current page person name from title
@@ -20,48 +13,65 @@ function getCurrentPerson() {
     return title.split(' - ')[0].toLowerCase();
 }
 
-// Load documents from GitHub for global sync
-async function loadDocumentsFromGitHub() {
+// Load documents from global data file (more reliable than API)
+function loadGlobalDocuments() {
     if (isLoading) return;
     isLoading = true;
     
     try {
-        showLoadingMessage('Loading documents...');
+        showLoadingMessage('Loading documents from global sync...');
         
-        // Fetch documents data from GitHub
-        const response = await fetch(
-            `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}?t=${Date.now()}`
-        );
-        
-        if (response.ok) {
-            const data = await response.json();
-            const content = atob(data.content);
-            documentsData = JSON.parse(content);
-        } else {
-            console.log('No documents data found, starting fresh');
-            documentsData = getDefaultDocumentsData();
+        // Check if global data is already loaded
+        if (window.GLOBAL_DOCUMENTS_DATA) {
+            documentsData = window.GLOBAL_DOCUMENTS_DATA;
+            hideLoadingMessage();
+            displayDocuments();
+            console.log('✅ Loaded from global data file');
+            isLoading = false;
+            return;
         }
         
-        hideLoadingMessage();
-        displayDocuments();
+        // Dynamically load the global documents data file
+        const script = document.createElement('script');
+        script.src = 'docs-data.js?v=' + Date.now(); // Cache busting
+        script.onload = function() {
+            if (window.GLOBAL_DOCUMENTS_DATA) {
+                documentsData = window.GLOBAL_DOCUMENTS_DATA;
+                displayDocuments();
+                hideLoadingMessage();
+                console.log('✅ Global documents loaded successfully');
+            } else {
+                fallbackToLocalStorage();
+            }
+            isLoading = false;
+        };
+        script.onerror = function() {
+            console.log('Failed to load global data, using fallback');
+            fallbackToLocalStorage();
+            isLoading = false;
+        };
+        document.head.appendChild(script);
         
     } catch (error) {
-        console.error('Error loading from GitHub:', error);
-        hideLoadingMessage();
-        
-        // Fallback to localStorage if GitHub fails
-        const localData = localStorage.getItem('familyDocuments');
-        if (localData) {
-            documentsData = JSON.parse(localData);
-            displayDocuments();
-            showNotification('Loaded from local storage. Some documents may not be synced globally.', 'warning');
-        } else {
-            documentsData = getDefaultDocumentsData();
-            displayDocuments();
-        }
+        console.error('Error loading global documents:', error);
+        fallbackToLocalStorage();
+        isLoading = false;
     }
-    
-    isLoading = false;
+}
+
+// Fallback to localStorage if global sync fails
+function fallbackToLocalStorage() {
+    hideLoadingMessage();
+    const localData = localStorage.getItem('familyDocuments');
+    if (localData) {
+        documentsData = JSON.parse(localData);
+        displayDocuments();
+        showNotification('Loaded from local storage. Add documents and refresh to sync globally.', 'warning');
+    } else {
+        documentsData = getDefaultDocumentsData();
+        displayDocuments();
+        showNotification('Starting fresh. Add documents and they will sync across devices.', 'info');
+    }
 }
 
 // Get default documents structure
@@ -190,7 +200,7 @@ function closeAddDocModal() {
     document.getElementById('addDocModal').classList.remove('active');
 }
 
-// Save new document with global sync
+// Save new document with better global sync
 async function saveDocument() {
     const categoryId = document.getElementById('modalCategoryId').value;
     const docName = document.getElementById('docName').value.trim();
@@ -234,7 +244,7 @@ async function saveDocument() {
     
     documentsData[person][categoryName].push(newDoc);
     
-    // Save to localStorage as backup and for manual sync
+    // Save to localStorage as backup
     localStorage.setItem('familyDocuments', JSON.stringify(documentsData));
     
     // Add to UI
@@ -247,12 +257,27 @@ async function saveDocument() {
     // Close modal
     closeAddDocModal();
     
-    // Show instructions for manual sync
-    showNotification('Document saved! Please update documents-data.json file and push to GitHub for global sync.', 'info');
-    console.log('To sync globally: Update documents-data.json with the new data and commit to GitHub');
+    // Show sync instructions
+    showSyncInstructions(person, categoryName, newDoc);
+    showNotification('Document saved! Follow the sync instructions to make it appear on all devices.', 'success');
 }
 
-// Delete document with global sync
+// Show detailed sync instructions
+function showSyncInstructions(person, category, doc) {
+    console.log('\n🌍 GLOBAL SYNC INSTRUCTIONS:');
+    console.log('================================');
+    console.log('To make this document appear on ALL devices:');
+    console.log('\n1. Open: docs-data.js file');
+    console.log(`2. Add this to "${person}" -> "${category}" array:`);
+    console.log(JSON.stringify(doc, null, 2));
+    console.log('\n3. Save the file');
+    console.log('4. Commit and push to GitHub');
+    console.log('5. Document will appear on all devices globally! 🌍');
+    console.log('\nCurrent data structure:');
+    console.log(JSON.stringify(documentsData, null, 2));
+}
+
+// Delete document with better global sync
 async function deleteDocument(button, docName) {
     // Password protection
     const password = prompt('Enter password to delete document:');
@@ -289,8 +314,16 @@ async function deleteDocument(button, docName) {
     // Update count
     updateCategoryCount(categoryId);
     
-    // Show instructions for manual sync
-    showNotification('Document deleted! Please update documents-data.json file and push to GitHub for global sync.', 'warning');
+    // Show sync instructions
+    console.log('\n🗑️ DOCUMENT DELETED - SYNC INSTRUCTIONS:');
+    console.log('=========================================');
+    console.log('To remove this document from ALL devices:');
+    console.log('1. Update docs-data.js file');
+    console.log('2. Remove the deleted document entry');
+    console.log('3. Save, commit and push to GitHub');
+    console.log('4. Document will be removed from all devices! 🌍');
+    
+    showNotification('Document deleted! Update docs-data.js to sync deletion globally.', 'warning');
 }
 
 // Loading and notification functions
