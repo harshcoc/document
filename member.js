@@ -1,10 +1,11 @@
-// Global document management system with reliable cross-device sync
+// Ultra-reliable global document sync system
 let documentsData = {};
 let isLoading = false;
 
-// Initialize documents system by loading global data
+// Initialize documents system with forced refresh
 function initializeDocuments() {
-    loadGlobalDocuments();
+    console.log('🔄 Initializing global document sync...');
+    loadGlobalDocumentsReliable();
 }
 
 // Get current page person name from title
@@ -13,64 +14,95 @@ function getCurrentPerson() {
     return title.split(' - ')[0].toLowerCase();
 }
 
-// Load documents from global data file (more reliable than API)
-function loadGlobalDocuments() {
+// Force load global documents with cache busting and multiple fallbacks
+function loadGlobalDocumentsReliable() {
     if (isLoading) return;
     isLoading = true;
     
-    try {
-        showLoadingMessage('Loading documents from global sync...');
-        
-        // Check if global data is already loaded
+    showLoadingMessage('Loading documents globally...');
+    
+    // Try multiple loading strategies
+    tryLoadingMethod1()
+        .then(() => {
+            console.log('✅ Method 1 successful');
+            finishLoading();
+        })
+        .catch(() => {
+            console.log('⚠️ Method 1 failed, trying Method 2...');
+            tryLoadingMethod2()
+                .then(() => {
+                    console.log('✅ Method 2 successful');
+                    finishLoading();
+                })
+                .catch(() => {
+                    console.log('⚠️ Method 2 failed, trying Method 3...');
+                    tryLoadingMethod3();
+                });
+        });
+}
+
+// Method 1: Check if global data is already loaded
+function tryLoadingMethod1() {
+    return new Promise((resolve, reject) => {
         if (window.GLOBAL_DOCUMENTS_DATA) {
             documentsData = window.GLOBAL_DOCUMENTS_DATA;
-            hideLoadingMessage();
-            displayDocuments();
-            console.log('✅ Loaded from global data file');
-            isLoading = false;
-            return;
+            resolve();
+        } else {
+            reject('Global data not pre-loaded');
         }
-        
-        // Dynamically load the global documents data file
+    });
+}
+
+// Method 2: Force reload the script with cache busting
+function tryLoadingMethod2() {
+    return new Promise((resolve, reject) => {
         const script = document.createElement('script');
-        script.src = 'docs-data.js?v=' + Date.now(); // Cache busting
+        script.src = `docs-data.js?v=${Date.now()}&cache=false`;
         script.onload = function() {
             if (window.GLOBAL_DOCUMENTS_DATA) {
                 documentsData = window.GLOBAL_DOCUMENTS_DATA;
-                displayDocuments();
-                hideLoadingMessage();
-                console.log('✅ Global documents loaded successfully');
+                resolve();
             } else {
-                fallbackToLocalStorage();
+                reject('Script loaded but no data found');
             }
-            isLoading = false;
         };
         script.onerror = function() {
-            console.log('Failed to load global data, using fallback');
-            fallbackToLocalStorage();
-            isLoading = false;
+            reject('Failed to load script');
         };
         document.head.appendChild(script);
-        
-    } catch (error) {
-        console.error('Error loading global documents:', error);
-        fallbackToLocalStorage();
-        isLoading = false;
-    }
+    });
 }
 
-// Fallback to localStorage if global sync fails
-function fallbackToLocalStorage() {
-    hideLoadingMessage();
+// Method 3: Fallback to localStorage and show manual sync instructions
+function tryLoadingMethod3() {
+    console.log('🔧 Using fallback method...');
     const localData = localStorage.getItem('familyDocuments');
     if (localData) {
         documentsData = JSON.parse(localData);
         displayDocuments();
-        showNotification('Loaded from local storage. Add documents and refresh to sync globally.', 'warning');
+        showNotification('Loaded from local storage. For cross-device sync, add documents to docs-data.js file.', 'warning');
     } else {
         documentsData = getDefaultDocumentsData();
         displayDocuments();
-        showNotification('Starting fresh. Add documents and they will sync across devices.', 'info');
+        showNotification('Starting fresh. Add documents below and follow sync instructions.', 'info');
+    }
+    finishLoading();
+}
+
+// Finish loading process
+function finishLoading() {
+    hideLoadingMessage();
+    displayDocuments();
+    isLoading = false;
+    
+    // Show sync status
+    const person = getCurrentPerson();
+    const personDocs = documentsData[person] || {};
+    const totalDocs = Object.values(personDocs).flat().length;
+    console.log(`📊 Loaded ${totalDocs} documents for ${person}`);
+    
+    if (window.GLOBAL_DOCUMENTS_DATA) {
+        showNotification(`✅ Global sync active! Loaded ${totalDocs} documents from cloud.`, 'success');
     }
 }
 
@@ -200,7 +232,7 @@ function closeAddDocModal() {
     document.getElementById('addDocModal').classList.remove('active');
 }
 
-// Save new document with better global sync
+// Save new document with clear global sync instructions
 async function saveDocument() {
     const categoryId = document.getElementById('modalCategoryId').value;
     const docName = document.getElementById('docName').value.trim();
@@ -247,34 +279,105 @@ async function saveDocument() {
     // Save to localStorage as backup
     localStorage.setItem('familyDocuments', JSON.stringify(documentsData));
     
-    // Add to UI
+    // Add to UI immediately
     const grid = section.querySelector('.documents-grid');
     addDocumentCard(grid, docName, docLink, currentDate, true);
-    
-    // Update count
     updateCategoryCount(categoryId);
-    
-    // Close modal
     closeAddDocModal();
     
-    // Show sync instructions
-    showSyncInstructions(person, categoryName, newDoc);
-    showNotification('Document saved! Follow the sync instructions to make it appear on all devices.', 'success');
+    // Show VERY clear sync instructions
+    showGlobalSyncInstructions(person, categoryName, newDoc);
+    showNotification('Document saved locally! Follow the instructions below to sync globally.', 'success');
 }
 
-// Show detailed sync instructions
-function showSyncInstructions(person, category, doc) {
-    console.log('\n🌍 GLOBAL SYNC INSTRUCTIONS:');
-    console.log('================================');
-    console.log('To make this document appear on ALL devices:');
-    console.log('\n1. Open: docs-data.js file');
-    console.log(`2. Add this to "${person}" -> "${category}" array:`);
+// Show crystal clear global sync instructions
+function showGlobalSyncInstructions(person, category, doc) {
+    console.log('\n🌍 ======================================');
+    console.log('🌍 MAKE THIS DOCUMENT APPEAR GLOBALLY');
+    console.log('🌍 ======================================');
+    console.log('\n📱 To see this document on YOUR PHONE:');
+    console.log('1. Edit docs-data.js file');
+    console.log(`2. Find "${person}" section`);
+    console.log(`3. Find "${category}" array`);
+    console.log('4. Add this exact text:');
+    console.log('');
+    console.log(JSON.stringify(doc, null, 4));
+    console.log('');
+    console.log('5. Save, commit, push to GitHub');
+    console.log('6. Refresh website on phone = DOCUMENT APPEARS! 📱');
+    console.log('');
+    console.log('🔄 COPY THIS EXACT LINE:');
+    console.log(`Add to docs-data.js → "${person}" → "${category}" array:`);
     console.log(JSON.stringify(doc, null, 2));
-    console.log('\n3. Save the file');
-    console.log('4. Commit and push to GitHub');
-    console.log('5. Document will appear on all devices globally! 🌍');
-    console.log('\nCurrent data structure:');
-    console.log(JSON.stringify(documentsData, null, 2));
+    
+    // Create visual popup with instructions
+    createSyncInstructionPopup(person, category, doc);
+}
+
+// Create a visual popup with sync instructions
+function createSyncInstructionPopup(person, category, doc) {
+    // Remove existing popup if any
+    const existingPopup = document.getElementById('syncInstructionPopup');
+    if (existingPopup) existingPopup.remove();
+    
+    const popup = document.createElement('div');
+    popup.id = 'syncInstructionPopup';
+    popup.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        border: 3px solid #2196F3;
+        border-radius: 15px;
+        padding: 30px;
+        max-width: 600px;
+        z-index: 10001;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        font-family: Arial, sans-serif;
+    `;
+    
+    popup.innerHTML = `
+        <h2 style="color: #2196F3; margin-top: 0;">🌍 Sync to ALL Devices</h2>
+        <p><strong>To make this document appear on your phone:</strong></p>
+        <ol style="line-height: 1.8;">
+            <li>Edit <code>docs-data.js</code> file</li>
+            <li>Find <code>"${person}"</code> section</li>
+            <li>Add this to <code>"${category}"</code> array:</li>
+        </ol>
+        <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin: 15px 0; overflow-x: auto;">
+            <code>${JSON.stringify(doc, null, 2)}</code>
+        </div>
+        <ol start="4" style="line-height: 1.8;">
+            <li>Save and push to GitHub</li>
+            <li>Refresh website on phone = Document appears! 📱</li>
+        </ol>
+        <div style="margin-top: 20px; text-align: center;">
+            <button onclick="document.getElementById('syncInstructionPopup').remove()" 
+                    style="background: #4CAF50; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 16px;">
+                Got it! 👍
+            </button>
+            <button onclick="copyToClipboard('${JSON.stringify(doc).replace(/'/g, "\\'")}'); showNotification('Copied to clipboard!', 'success');"
+                    style="background: #2196F3; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 16px; margin-left: 10px;">
+                Copy Code 📋
+            </button>
+        </div>
+    `;
+    
+    document.body.appendChild(popup);
+}
+
+// Copy to clipboard function
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).catch(() => {
+        // Fallback for older browsers
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+    });
 }
 
 // Delete document with better global sync
@@ -462,10 +565,35 @@ window.onclick = function(event) {
     }
 }
 
-// Initialize on page load with GitHub sync
+// Initialize on page load with global sync and add refresh button
 document.addEventListener('DOMContentLoaded', function() {
     initializeDocuments();
     setupSearchFunctionality();
+    addRefreshButton();
 });
 
-console.log('Global sync member page loaded successfully! 🌍🔄');
+// Add a refresh button to force reload documents
+function addRefreshButton() {
+    const navbar = document.querySelector('.nav-container');
+    if (navbar) {
+        const refreshBtn = document.createElement('button');
+        refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Refresh Sync';
+        refreshBtn.style.cssText = `
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 10px;
+        `;
+        refreshBtn.onclick = function() {
+            showNotification('Refreshing global sync...', 'info');
+            location.reload();
+        };
+        navbar.appendChild(refreshBtn);
+    }
+}
+
+console.log('🌍 Ultra-reliable global sync system loaded! 🔄');

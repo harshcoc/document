@@ -1,11 +1,11 @@
 // Global document data that syncs across all devices
-// This file is loaded directly from GitHub for instant cross-device sync
+// Last updated: 2024-11-28 - LATEST VERSION
 
 window.GLOBAL_DOCUMENTS_DATA = {
   "harsh": {
     "Gov doc": [
       {
-        "name": "Test Document (Should appear on ALL devices)",
+        "name": "🌍 GLOBAL SYNC TEST - If you see this, sync is working!",
         "link": "https://drive.google.com/file/d/example123/view",
         "date": "2024-11-28"
       }
@@ -13,7 +13,13 @@ window.GLOBAL_DOCUMENTS_DATA = {
     "Bank doc": []
   },
   "mamta": {
-    "Gov doc": [],
+    "Gov doc": [
+      {
+        "name": "📱 PHONE TEST - This should appear on your phone too!",
+        "link": "https://drive.google.com/file/d/example456/view",
+        "date": "2024-11-28"
+      }
+    ],
     "Bank doc": []
   },
   "manoj": {
