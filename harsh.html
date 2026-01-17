@@ -25,28 +25,7 @@
         </div>
     </nav>
 
-    <!-- Password Modal -->
-    <div id="passwordModal" class="modal active">
-        <div class="modal-content">
-            <h2>
-                <i class="fas fa-lock"></i> Protected Access
-            </h2>
-            <p>This section requires authentication</p>
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" placeholder="Enter username">
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" placeholder="Enter password">
-            </div>
-            <div class="modal-buttons">
-                <a href="index.html" class="cancel-btn" style="text-align: center; text-decoration: none; display: block; line-height: 1.5;">Cancel</a>
-                <button class="submit-btn" onclick="verifyPassword()">Submit</button>
-            </div>
-            <p id="errorMsg" class="error-msg"></p>
-        </div>
-    </div>
+   
 
     <!-- Main Container (Hidden until authenticated) -->
     <div id="mainContent" class="container" style="display: none;">
@@ -135,3 +114,4 @@
 </body>
 
 </html>
+
